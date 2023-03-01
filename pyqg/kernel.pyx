@@ -2,7 +2,7 @@
 #cython: wraparound=False
 #cython: nonecheck=False
 #cython: language_level=3
-#distutils: define_macros=NPY_NO_DEPRECATED_API=NPY_1_7_API_VERSION
+#distutils: define_macros=NPY_NO_DEPRECATED_API=NPY_1_15_API_VERSION
 import numpy as np
 cimport numpy as np
 from cython.parallel import prange
