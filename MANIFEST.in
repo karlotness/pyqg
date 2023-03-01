@@ -1,7 +1,6 @@
 include README.md MANIFEST.in LICENSE setup.py pyproject.toml
 recursive-include pyqg *.pyx
 prune docs
-prune ci
 prune examples
 prune benchmark
 prune .github
