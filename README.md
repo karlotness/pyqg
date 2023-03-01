@@ -8,6 +8,7 @@
 [![PyQG on conda-forge](https://img.shields.io/conda/vn/conda-forge/pyqg)][conda]
 [![PyQG on PyPI](https://img.shields.io/pypi/v/pyqg)][pypi]
 [![Build Status](https://github.com/pyqg/pyqg/actions/workflows/ci.yaml/badge.svg)][buildstatus]
+[![Codecov](https://codecov.io/github/pyqg/pyqg/coverage.svg?branch=master)][codecov]
 [![Documentation](https://readthedocs.org/projects/pyqg/badge/?version=stable)][docs]
 [![Binder](https://mybinder.org/badge_logo.svg)][binder]
 
@@ -41,5 +42,6 @@ system with many cores.
 [conda]: https://anaconda.org/conda-forge/pyqg
 [pypi]: https://pypi.org/project/pyqg/
 [buildstatus]: https://github.com/pyqg/pyqg/actions/workflows/ci.yaml
-[docs]: http://pyqg.readthedocs.org
+[codecov]: https://app.codecov.io/github/pyqg/pyqg/branch/master
+[docs]: https://pyqg.readthedocs.org
 [binder]: https://mybinder.org/v2/gh/pyqg/pyqg/HEAD
