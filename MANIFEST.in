@@ -4,4 +4,4 @@ prune docs
 prune examples
 prune benchmark
 prune .github
-exclude index.ipynb requirements.txt .gitattributes .gitignore codecov.yml readthedocs.yml
+exclude index.ipynb requirements.txt .gitignore codecov.yml readthedocs.yml
