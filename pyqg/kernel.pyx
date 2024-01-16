@@ -12,8 +12,7 @@ from cython.parallel import prange
 try:
     import pyfftw
     pyfftw.interfaces.cache.enable()
-except ImportError:
-    warnings.warn('No pyfftw detected. Using numpy.fft')
+except ModuleNotFoundError:
     pyfftw = None
 
 # We now need to fix a datatype for our arrays. I've used the variable
