@@ -189,13 +189,13 @@ class LayeredModel(qg_diagnostics.QGDiagnostics):
         self._initialize_stretching_matrix()
 
         # the meridional PV gradients in each layer
-        self.Qy = self.beta - np.dot(self.S,self.Ubg) # m^-1 s^-1 
-        self.Qx = np.dot(self.S,self.Vbg)             # m^-1 s^-1 
+        self.Qy = self.beta - np.dot(self.S,self.Ubg) # m^-1 s^-1
+        self.Qx = np.dot(self.S,self.Vbg)             # m^-1 s^-1
 
 
         # complex versions, multiplied by k, speeds up computations to precompute
-        self.ikQy = self.Qy[:,np.newaxis,np.newaxis]*1j*self.k # m^-2 s^-1 
-        self.ilQx = self.Qx[:,np.newaxis,np.newaxis]*1j*self.l # m^-2 s^-1 
+        self.ikQy = self.Qy[:,np.newaxis,np.newaxis]*1j*self.k # m^-2 s^-1
+        self.ilQx = self.Qx[:,np.newaxis,np.newaxis]*1j*self.l # m^-2 s^-1
 
     def _initialize_inversion_matrix(self):
 
@@ -262,7 +262,7 @@ class LayeredModel(qg_diagnostics.QGDiagnostics):
                 units='m^2 s^-2',
                 dims=('lev_mid','l','k')
         )
-        
+
         self.add_diagnostic('APEspec',
                 description='available potential energy spectrum',
                 function= (lambda self:
@@ -271,7 +271,7 @@ class LayeredModel(qg_diagnostics.QGDiagnostics):
                 units='m^2 s^-2',
                 dims=('l','k')
         )
-        
+
         self.add_diagnostic('KEflux_div',
                     description='spectral divergence of flux of kinetic energy',
                     function =(lambda self: (self.Hi[:,np.newaxis,np.newaxis]*
@@ -280,7 +280,7 @@ class LayeredModel(qg_diagnostics.QGDiagnostics):
                 dims=('l','k'),
                 sums_with=['paramspec_KEflux'],
         )
-        
+
         self.add_diagnostic('APEflux_div',
                     description='spectral divergence of flux of available potential energy',
                     function =(lambda self: (self.Hi[:,np.newaxis,np.newaxis]*
@@ -289,6 +289,3 @@ class LayeredModel(qg_diagnostics.QGDiagnostics):
                 dims=('l','k'),
                 sums_with=['paramspec_APEflux'],
         )
-        
-
-

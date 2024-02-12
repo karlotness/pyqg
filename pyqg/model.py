@@ -632,19 +632,19 @@ class Model(PseudoSpectralKernel):
 
     def _initialize_core_diagnostics(self):
         """Diagnostics common to all models."""
-       
+
         self.add_diagnostic('Ensspec',
             description='enstrophy spectrum',
             function= (lambda self: np.abs(self.qh)**2/self.M**2),
             units='s^-2',
-            dims=('lev','l','k')         
+            dims=('lev','l','k')
         )
 
         self.add_diagnostic('KEspec',
             description='kinetic energy spectrum',
             function= (lambda self: self.wv2*np.abs(self.ph)**2/self.M**2),
             units='m^2 s^-2',
-            dims=('lev','l','k')  
+            dims=('lev','l','k')
         )      # factor of 2 to account for the fact that we have only half of
                #    the Fourier coefficients.
 
@@ -694,7 +694,7 @@ class Model(PseudoSpectralKernel):
 
         self.add_diagnostic('Dissspec',
             description='Spectral contribution of filter dissipation to total energy',
-            function=(lambda self: -np.tensordot(self.Hi, 
+            function=(lambda self: -np.tensordot(self.Hi,
                 np.conj(self.ph)*dissipation_spectrum(self), axes=(0, 0)).real/self.H/self.dt/self.M**2),
             units='m^2 s^-3',
             dims=('l','k')
@@ -702,7 +702,7 @@ class Model(PseudoSpectralKernel):
 
         self.add_diagnostic('ENSDissspec',
             description='Spectral contribution of filter dissipation to barotropic enstrophy',
-            function=(lambda self: np.tensordot(self.Hi, 
+            function=(lambda self: np.tensordot(self.Hi,
                 np.conj(self.qh)*dissipation_spectrum(self), axes=(0, 0)).real/self.H/self.dt/self.M**2),
             units='s^-3',
             dims=('l','k')
@@ -790,7 +790,6 @@ class Model(PseudoSpectralKernel):
 
     def _increment_diagnostics(self):
         # compute intermediate quantities needed for some diagnostics
-
         self._calc_derived_fields()
 
         for dname in self.diagnostics:
@@ -828,7 +827,7 @@ class Model(PseudoSpectralKernel):
 
     def to_dataset(self):
         """Convert outputs from model to an xarray dataset
-        
+
         Returns
         -------
         ds : xarray.Dataset

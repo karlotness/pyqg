@@ -137,7 +137,7 @@ class QGModel(qg_diagnostics.QGDiagnostics):
         # The matrix multiplication will look like this
         # ph[0] = a[0,0] * self.qh[0] + a[0,1] * self.qh[1]
         # ph[1] = a[1,0] * self.qh[0] + a[1,1] * self.qh[1]
-        
+
         a = np.ma.zeros((self.nz, self.nz, self.nl, self.nk), np.dtype('float64'))
         # inverse determinant
         det_inv =  np.ma.masked_equal(
@@ -250,5 +250,3 @@ class QGModel(qg_diagnostics.QGDiagnostics):
             units='m^2 s^-3',
             dims=('time',)
        )
-
-
