@@ -2,7 +2,6 @@ import numpy as np
 from numpy import pi
 import logging
 import warnings
-import inspect
 
 from .errors import DiagnosticNotFilledError
 from .kernel import PseudoSpectralKernel, tendency_forward_euler, tendency_ab2, tendency_ab3
@@ -200,11 +199,13 @@ class Model(PseudoSpectralKernel):
             else:
                 raise ValueError(f"unknown parameterization type {ptype}")
 
-        # TODO: be more clear about what attributes are cython and what
-        # attributes are python
-        PseudoSpectralKernel.__init__(self, nz, ny, nx, ntd,
-                has_q_param=int(q_parameterization is not None),
-                has_uv_param=int(uv_parameterization is not None))
+        super().__init__(
+            nz=nz,
+            ny=ny,
+            nx=nx,
+            has_q_param=q_parameterization is not None,
+            has_uv_param=uv_parameterization is not None,
+        )
 
         self.L = L
         self.W = W
