@@ -17,7 +17,7 @@ class PseudoSpectralKernel:
         self.nx = ny
         self.nl = ny
         self.nk = nx // 2 + 1
-        self.a = np.zeros((self.nz, self.nz, self.nl, self.nk), DTYPE_com)
+        self._a = np.zeros((self.nz, self.nz, self.nl, self.nk), DTYPE_com)
         self._kk = np.zeros((self.nk), DTYPE_real)
         self._ik = np.zeros((self.nk), DTYPE_com)
         self._ll = np.zeros((self.nl), DTYPE_real)
@@ -250,6 +250,14 @@ class PseudoSpectralKernel:
     @property
     def vfull(self):
         return self.v
+
+    @property
+    def a(self):
+        return self._a
+
+    @a.setter
+    def a(self, a):
+        self._a = np.copy(a).astype(DTYPE_com)
 
 
 def tendency_forward_euler(dt, dqdt):
