@@ -12,7 +12,7 @@ authors = [
   {name = "pyqg team"},
 ]
 dependencies = [
-    "numpy",
+    "numpy>=1.22,<2",
 ]
 classifiers = [
     "Development Status :: 4 - Beta",
