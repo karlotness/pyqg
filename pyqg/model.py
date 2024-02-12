@@ -7,17 +7,6 @@ import inspect
 from .errors import DiagnosticNotFilledError
 from .kernel import PseudoSpectralKernel, tendency_forward_euler, tendency_ab2, tendency_ab3
 from .parameterizations import Parameterization
-try:
-    import mkl
-    np.use_fastnumpy = True
-except ImportError:
-    pass
-
-try:
-    import pyfftw
-    pyfftw.interfaces.cache.enable()
-except ImportError:
-    pass
 
 class Model(PseudoSpectralKernel):
     """A generic pseudo-spectral inversion model.

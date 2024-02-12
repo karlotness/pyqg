@@ -2,17 +2,6 @@ import numpy as np
 from numpy import pi
 from . import qg_diagnostics
 
-try:
-    import mkl
-    np.use_fastnumpy = True
-except ImportError:
-    pass
-
-try:
-    import pyfftw
-    pyfftw.interfaces.cache.enable()
-except ImportError:
-    pass
 
 class QGModel(qg_diagnostics.QGDiagnostics):
     r"""Two layer quasigeostrophic model.
