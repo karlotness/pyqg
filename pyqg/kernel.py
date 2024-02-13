@@ -14,7 +14,7 @@ class PseudoSpectralKernel:
     ):
         self.nz = nz
         self.ny = ny
-        self.nx = ny
+        self.nx = nx
         self.nl = ny
         self.nk = nx // 2 + 1
         self._a = np.zeros((self.nz, self.nz, self.nl, self.nk), DTYPE_com)
