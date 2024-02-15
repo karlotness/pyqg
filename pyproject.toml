@@ -40,7 +40,7 @@ Documentation = "https://pyqg.readthedocs.io"
 "Issue Tracker" = "https://github.com/pyqg/pyqg/issues"
 
 [tool.flit.sdist]
-include = ["tests/", "LICENSE"]
+include = ["tests/", "LICENSE.txt"]
 exclude = ["**/*~"]
 
 [tool.pytest.ini_options]
