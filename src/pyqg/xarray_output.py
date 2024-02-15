@@ -5,7 +5,7 @@ except ImportError:
     raise ImportError(
         "Xarray output in Pyqg requires the Xarray package, which is not installed on your system. " 
         "Please install Xarray in order to activate this feature. "
-        "Instructions at http://xarray.pydata.org/en/stable/getting-started-guide/installing.html#instructions"
+        "Instructions at https://docs.xarray.dev/en/stable/getting-started-guide/installing.html#instructions"
     )
     
 from pyqg.errors import DiagnosticNotFilledError

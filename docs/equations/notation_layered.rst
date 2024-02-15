@@ -2,8 +2,8 @@ Layered quasi-geostrophic model
 ===============================
 
 Consider an :math:`{N}`-layer quasi-geostrophic (QG) model with rigid lid and
-flat topography (for reference, see Eq. 5.85 in 
-`Vallis, 2017 <http://empslocal.ex.ac.uk/people/staff/gv219/aofd/>`__). 
+flat topography (for reference, see Eq. 5.85 in
+`Vallis, 2017 <https://empslocal.ex.ac.uk/people/staff/gv219/aofd/>`__).
 The :math:`{N}`-layer QG potential vorticity is
 
 .. math::

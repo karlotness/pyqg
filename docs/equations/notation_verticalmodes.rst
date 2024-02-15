@@ -8,7 +8,7 @@ eigenvectors of the “stretching matrix”
 
 where the :math:`R_n` is by definition the n’th deformation radius
 (e.g., `Flierl
-1978 <http://www.sciencedirect.com/science/article/pii/0377026578900027>`__).
+1978 <https://www.sciencedirect.com/science/article/pii/0377026578900027>`__).
 These orthogonal modes :math:`{\mathsf{p}}_n` are normalized to have
 unitary :math:`L2`-norm
 

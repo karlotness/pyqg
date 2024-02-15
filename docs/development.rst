@@ -12,9 +12,9 @@ Team
 
 - `Francis Poulin`_, University of Waterloo
 
-.. _Malte Jansen: http://geosci.uchicago.edu/people/malte-jansen/
-.. _Ryan Abernathey: http://rabernat.github.io
-.. _Cesar Rocha: http://www.cbrocha.com
+.. _Malte Jansen: https://geosci.uchicago.edu/people/malte-jansen/
+.. _Ryan Abernathey: https://rabernat.github.io
+.. _Cesar Rocha: https://www.cbrocha.com
 .. _Francis Poulin: https://uwaterloo.ca/poulin-research-group/
 
 History
@@ -181,7 +181,6 @@ If this all works, then you should be ready to create the Github `release`_.
 .. _testpypi: https://packaging.python.org/en/latest/guides/using-testpypi
 .. _pypi: https://pypi.python.org/pypi/pyqg
 .. _release: https://help.github.com/articles/creating-releases/
-.. _instructions: http://peterdowns.com/posts/first-time-with-pypi.html
 .. _semver: https://semver.org/
 .. _most recent test publish: https://github.com/pyqg/pyqg/actions/workflows/publish-to-test-pypi.yml
 .. _TestPyPI history: https://test.pypi.org/project/pyqg/#history
