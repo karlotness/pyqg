@@ -40,12 +40,12 @@ Documentation = "https://pyqg.readthedocs.io"
 "Issue Tracker" = "https://github.com/pyqg/pyqg/issues"
 
 [tool.flit.sdist]
-include = ["LICENSE"]
+include = ["tests/", "LICENSE"]
 exclude = ["**/*~"]
 
 [tool.pytest.ini_options]
 minversion = "6.0"
-testpaths = ["pyqg/tests"]
+testpaths = ["tests"]
 addopts = [
   "--import-mode=importlib",
 ]
