@@ -7,10 +7,7 @@
 [![Zenodo DOI](https://zenodo.org/badge/14957/pyqg/pyqg.svg)][doi]
 [![PyQG on conda-forge](https://img.shields.io/conda/vn/conda-forge/pyqg)][conda]
 [![PyQG on PyPI](https://img.shields.io/pypi/v/pyqg)][pypi]
-[![Build Status](https://github.com/pyqg/pyqg/actions/workflows/ci.yaml/badge.svg)][buildstatus]
-[![Codecov](https://codecov.io/github/pyqg/pyqg/coverage.svg?branch=master)][codecov]
 [![Documentation](https://readthedocs.org/projects/pyqg/badge/?version=stable)][docs]
-[![Binder](https://mybinder.org/badge_logo.svg)][binder]
 
 pyqg is a python solver for quasigeostrophic systems. Quasigeostophic
 equations are an approximation to the full fluid equations of motion in
@@ -24,23 +21,14 @@ for clear documentation and thorough testing.
 
 pyqg supports a variety of different configurations using the same
 computational kernel. The different configurations are evolving and are
-described in detail in the documentation. The kernel, implement in
-cython, uses a pseudo-spectral method which is heavily dependent on the
-fast Fourier transform. For this reason, pyqg uses pyfftw and the FFTW
-Fourier Transform library. With pyfftw, the kernel is multi-threaded but
-does not support mpi. Optimal performance will be achieved on a single
-system with many cores.
+described in detail in the documentation.
 
 ## Links
 -  HTML documentation: https://pyqg.readthedocs.org
 -  Issue tracker: https://github.com/pyqg/pyqg/issues
 -  Source code: https://github.com/pyqg/pyqg
--  pyfftw: https://github.com/pyFFTW/pyFFTW
 
 [doi]: https://zenodo.org/badge/latestdoi/14957/pyqg/pyqg
 [conda]: https://anaconda.org/conda-forge/pyqg
 [pypi]: https://pypi.org/project/pyqg/
-[buildstatus]: https://github.com/pyqg/pyqg/actions/workflows/ci.yaml
-[codecov]: https://app.codecov.io/github/pyqg/pyqg/branch/master
 [docs]: https://pyqg.readthedocs.org
-[binder]: https://mybinder.org/v2/gh/pyqg/pyqg/HEAD
