@@ -15,3 +15,5 @@ updates:
     versioning-strategy: increase-if-necessary
     ignore:
       - dependency-name: "Cython"
+      - dependency-name: "numpy"
+        update-types: ["version-update:semver-major"]
