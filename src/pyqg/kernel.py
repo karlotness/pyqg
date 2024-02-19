@@ -68,31 +68,31 @@ class PseudoSpectralKernel:
         self.dqhdt_p = self._empty_com()
         self.dqhdt_pp = self._empty_com()
 
-    def fft_q_to_qh(self):
+    def _fft_q_to_qh(self):
         self._qh = np.fft.rfftn(self._q, axes=(-2, -1))
 
-    def ifft_qh_to_q(self):
+    def _ifft_qh_to_q(self):
         self._q = np.fft.irfftn(self._qh, axes=(-2, -1))
 
-    def ifft_uh_to_u(self):
+    def _ifft_uh_to_u(self):
         self.u = np.fft.irfftn(self.uh, axes=(-2, -1))
 
-    def ifft_vh_to_v(self):
+    def _ifft_vh_to_v(self):
         self.v = np.fft.irfftn(self.vh, axes=(-2, -1))
 
-    def fft_du_to_duh(self):
+    def _fft_du_to_duh(self):
         self.duh = np.fft.rfftn(self.du, axes=(-2, -1))
 
-    def fft_dv_to_dvh(self):
+    def _fft_dv_to_dvh(self):
         self.dvh = np.fft.rfftn(self.dv, axes=(-2, -1))
 
-    def fft_dq_to_dqh(self):
+    def _fft_dq_to_dqh(self):
         self.dqh = np.fft.rfftn(self.dq, axes=(-2, -1))
 
-    def fft_uq_to_uqh(self):
+    def _fft_uq_to_uqh(self):
         self.uqh = np.fft.rfftn(self.uq, axes=(-2, -1))
 
-    def fft_vq_to_vqh(self):
+    def _fft_vq_to_vqh(self):
         self.vqh = np.fft.rfftn(self.vq, axes=(-2, -1))
 
     def _dummy_fft(self):
@@ -122,14 +122,14 @@ class PseudoSpectralKernel:
         self.ph = np.sum(self.a * np.expand_dims(self.qh, 0), axis=1)
         self.uh = np.negative(np.expand_dims(self._il, (0, -1))) * self.ph
         self.vh = np.expand_dims(self._ik, (0, 1)) * self.ph
-        self.ifft_uh_to_u()
-        self.ifft_vh_to_v()
+        self._ifft_uh_to_u()
+        self._ifft_vh_to_v()
 
     def _do_advection(self):
         self.uq = (self.u + np.expand_dims(self.Ubg[: self.nz], (-1, -2))) * self.q
         self.vq = self.v * self.q
-        self.fft_uq_to_uqh()
-        self.fft_vq_to_vqh()
+        self._fft_uq_to_uqh()
+        self._fft_vq_to_vqh()
         # spectral divergence
         self.dqhdt = np.negative(
             np.expand_dims(self._ik, (0, 1)) * self.uqh
@@ -139,8 +139,8 @@ class PseudoSpectralKernel:
 
     def _do_uv_subgrid_parameterization(self):
         self.du, self.dv = self.uv_parameterization(self)
-        self.fft_du_to_duh()
-        self.fft_dv_to_dvh()
+        self._fft_du_to_duh()
+        self._fft_dv_to_dvh()
         self.dqhdt = (
             self.dqhdt
             + ((-1 * np.expand_dims(self._il, (0, -1))) * self.duh)
@@ -149,7 +149,7 @@ class PseudoSpectralKernel:
 
     def _do_q_subgrid_parameterization(self):
         self.dq = self.q_parameterization(self)
-        self.fft_dq_to_dqh()
+        self._fft_dq_to_dqh()
         self.dqhdt = self.dqhdt + self.dqh
 
     def _do_friction(self):
@@ -182,7 +182,7 @@ class PseudoSpectralKernel:
         self.qh = qh_new
         self.dqhdt_pp = self.dqhdt_p
         self.dqhdt_p = self.dqhdt
-        self.ifft_qh_to_q()
+        self._ifft_qh_to_q()
         self.tc += 1
         self.t += self._dt
 
@@ -232,7 +232,7 @@ class PseudoSpectralKernel:
     @q.setter
     def q(self, b):
         self._q = np.copy(b)
-        self.fft_q_to_qh()
+        self._fft_q_to_qh()
 
     @property
     def qh(self):
@@ -241,7 +241,7 @@ class PseudoSpectralKernel:
     @qh.setter
     def qh(self, b):
         self._qh = np.copy(b)
-        self.ifft_qh_to_q()
+        self._ifft_qh_to_q()
 
     @property
     def ufull(self):
