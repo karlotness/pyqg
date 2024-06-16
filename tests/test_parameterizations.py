@@ -51,7 +51,8 @@ def test_addition_and_scaling(model, rtol=1e-11):
 
 def test_ring(model):
     ring = pyqg.RingForcing()
-    dq = ring(model)
+    with np.errstate(invalid="ignore"):
+        dq = ring(model)
 
 if __name__ == "__main__":
     unittest.main()
