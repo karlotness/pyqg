@@ -307,7 +307,7 @@ class Model(PseudoSpectralKernel):
                 transform calculates p from pn"""
 
         if forward:
-            pt = np.linalg.solve(self.pmodes[np.newaxis,np.newaxis],p.T).T
+            pt = np.linalg.solve(self.pmodes[np.newaxis,np.newaxis],p.T[..., np.newaxis])[..., 0].T
         else:
             pt = np.einsum("ik,k...->i...",self.pmodes,p)
 
