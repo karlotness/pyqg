@@ -1,5 +1,5 @@
+import warnings
 import numpy as np
-from numpy import pi
 from . import qg_diagnostics
 
 
@@ -158,7 +158,7 @@ class QGModel(qg_diagnostics.QGDiagnostics):
         # self.filtr = np.exp(-self.filterfac*(wvx-cphi)**4.)
         # self.filtr[wvx<=cphi] = 1.
 
-    def set_q1q2(self, q1, q2, check=False):
+    def set_q1q2(self, q1, q2, check=None):
         """Set upper and lower layer PV anomalies.
 
         Parameters
@@ -177,9 +177,11 @@ class QGModel(qg_diagnostics.QGDiagnostics):
         #self.qh = self.fft2(self.q)
 
         # check that it works
-        if check:
-            np.testing.assert_allclose(self.q1, q1)
-            np.testing.assert_allclose(self.q1, self.ifft2(self.qh1))
+        if check is not None:
+            warnings.warn(
+                "The check argument is deprecated and no longer has any effect",
+                category=DeprecationWarning,
+            )
 
     def set_U1U2(self, U1, U2):
         """Set background zonal flow.
