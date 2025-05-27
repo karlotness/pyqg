@@ -8,7 +8,7 @@ Requirements
 
 The only requirements are
 
-- Python (3.8 or later)
+- Python (3.9 or later)
 - numpy_ (1.22 or later)
 
 PyQG can also conveniently store model output data as an xarray dataset. The feature (which is used in some of the examples in this documentation) requires xarray_.
