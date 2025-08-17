@@ -8,7 +8,7 @@ from .kernel import PseudoSpectralKernel, tendency_forward_euler, tendency_ab2, 
 from .parameterizations import Parameterization
 
 class Model(PseudoSpectralKernel):
-    """A generic pseudo-spectral inversion model.
+    r"""A generic pseudo-spectral inversion model.
 
     Attributes
     ----------
@@ -122,7 +122,7 @@ class Model(PseudoSpectralKernel):
                                        #     logger (see  https://docs.python.org/2/library/logging.html)
         logfile = None,                # logfile; None prints to screen
         ):
-        """
+        r"""
         .. note:: All of the test cases use ``nx==ny``. Expect bugs if you choose
                   these parameters to be different.
         .. note:: All time intervals will be rounded to nearest `dt` interval.
