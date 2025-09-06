@@ -55,10 +55,9 @@ class PseudoSpectralKernel:
         self._dummy_ifft_out = self._empty_real()
 
         # time stuff
-        self._dt = 0.0
+        self.dt = 0.0
         self.t = 0.0
         self.tc = 0
-        self.ablevel = 0
 
         # friction
         self.rek = 0.0
@@ -158,20 +157,8 @@ class PseudoSpectralKernel:
             self.dqhdt[k] = self.dqhdt[k] + (self.rek * self._k2l2 * self.ph[k])
 
     def _forward_timestep(self):
-        if self.ablevel == 0:
-            dt1 = self._dt
-            dt2 = 0.0
-            dt3 = 0.0
-            self.ablevel = 1
-        elif self.ablevel == 1:
-            dt1 = 1.5*self._dt
-            dt2 = -0.5*self._dt
-            dt3 = 0.0
-            self.ablevel = 2
-        else:
-            dt1 = 23./12.*self._dt
-            dt2 = -16./12.*self._dt
-            dt3 = 5./12.*self._dt
+        dt1, dt2, dt3, next_ablevel = self._ab3_coeffs[self.ablevel]
+        self.ablevel = next_ablevel
 
         qh_new = np.expand_dims(self.filtr, 0) * (
             self._qh +
@@ -193,6 +180,11 @@ class PseudoSpectralKernel:
     @dt.setter
     def dt(self, dt):
         self._dt = dt
+        self._ab3_coeffs = (
+            (self._dt, 0.0, 0.0, 1),
+            (1.5 * self._dt, -0.5 * self._dt, 0.0, 2),
+            ((23 / 12) * self._dt, (-16 / 12) * self._dt, (5 / 12) * self._dt, 2),
+        )
         self.ablevel = 0
 
     @property
