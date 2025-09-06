@@ -69,37 +69,37 @@ class PseudoSpectralKernel:
         self.dqhdt_pp = self._empty_com()
 
     def _fft_q_to_qh(self):
-        self._qh = np.fft.rfftn(self._q, axes=(-2, -1))
+        np.fft.rfftn(self._q, axes=(-2, -1), out=self._qh)
 
     def _ifft_qh_to_q(self):
-        self._q = np.fft.irfftn(self._qh, axes=(-2, -1))
+        np.fft.irfftn(self._qh, axes=(-2, -1), out=self._q)
 
     def _ifft_uh_to_u(self):
-        self.u = np.fft.irfftn(self.uh, axes=(-2, -1))
+        np.fft.irfftn(self.uh, axes=(-2, -1), out=self.u)
 
     def _ifft_vh_to_v(self):
-        self.v = np.fft.irfftn(self.vh, axes=(-2, -1))
+        np.fft.irfftn(self.vh, axes=(-2, -1), out=self.v)
 
     def _fft_du_to_duh(self):
-        self.duh = np.fft.rfftn(self.du, axes=(-2, -1))
+        np.fft.rfftn(self.du, axes=(-2, -1), out=self.duh)
 
     def _fft_dv_to_dvh(self):
-        self.dvh = np.fft.rfftn(self.dv, axes=(-2, -1))
+        np.fft.rfftn(self.dv, axes=(-2, -1), out=self.dvh)
 
     def _fft_dq_to_dqh(self):
-        self.dqh = np.fft.rfftn(self.dq, axes=(-2, -1))
+        np.fft.rfftn(self.dq, axes=(-2, -1), out=self.dqh)
 
     def _fft_uq_to_uqh(self):
-        self.uqh = np.fft.rfftn(self.uq, axes=(-2, -1))
+        np.fft.rfftn(self.uq, axes=(-2, -1), out=self.uqh)
 
     def _fft_vq_to_vqh(self):
-        self.vqh = np.fft.rfftn(self.vq, axes=(-2, -1))
+        np.fft.rfftn(self.vq, axes=(-2, -1), out=self.vqh)
 
     def _dummy_fft(self):
-        self._dummy_fft_out = np.fft.rfftn(self._dummy_fft_in, axes=(-2, -1))
+        np.fft.rfftn(self._dummy_fft_in, axes=(-2, -1), out=self._dummy_fft_out)
 
     def _dummy_ifft(self):
-        self._dummy_ifft_out = np.fft.irfftn(self._dummy_ifft_in, axes=(-2, -1))
+        np.fft.irfftn(self._dummy_ifft_in, axes=(-2, -1), out=self._dummy_ifft_out)
 
     def _empty_real(self):
         """Allocate a space-grid-sized variable for use with fftw transformations."""
