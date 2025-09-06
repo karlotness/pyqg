@@ -119,15 +119,15 @@ class PseudoSpectralKernel:
         return np.fft.irfftn(v, axes=(-2, -1))
 
     def _invert(self):
-        self.ph = np.sum(self.a * np.expand_dims(self.qh, 0), axis=1)
-        self.uh = np.negative(np.expand_dims(self._il, (0, -1))) * self.ph
-        self.vh = np.expand_dims(self._ik, (0, 1)) * self.ph
+        np.sum(self.a * np.expand_dims(self.qh, 0), axis=1, out=self.ph)
+        np.multiply(np.negative(np.expand_dims(self._il, (0, -1))), self.ph, out=self.uh)
+        np.multiply(np.expand_dims(self._ik, (0, 1)), self.ph, out=self.vh)
         self._ifft_uh_to_u()
         self._ifft_vh_to_v()
 
     def _do_advection(self):
-        self.uq = (self.u + np.expand_dims(self.Ubg[: self.nz], (-1, -2))) * self.q
-        self.vq = self.v * self.q
+        np.multiply((self.u + np.expand_dims(self.Ubg[: self.nz], (-1, -2))), self.q, out=self.uq)
+        np.multiply(self.v, self.q, out=self.vq)
         self._fft_uq_to_uqh()
         self._fft_vq_to_vqh()
         # spectral divergence
