@@ -1,4 +1,11 @@
 import numpy as np
+import warnings
+
+try:
+    import pyfftw
+except ModuleNotFoundError:
+    warnings.warn("No PyFFTW detected. Using numpy.fft")
+    pyfftw = None
 
 DTYPE_real = np.float64
 DTYPE_com = np.complex128
@@ -11,6 +18,7 @@ class PseudoSpectralKernel:
         nx: int,
         has_q_param: bool = False,
         has_uv_param: bool = False,
+        ntd: int = 1,
     ):
         self.nz = nz
         self.ny = ny
@@ -23,6 +31,8 @@ class PseudoSpectralKernel:
         self._ll = np.zeros((self.nl), DTYPE_real)
         self._il = np.zeros((self.nl), DTYPE_com)
         self._k2l2 = np.zeros((self.nl, self.nk), DTYPE_real)
+        self.ntd = ntd
+        self.num_thraeds = fftw_num_threads
 
         # initialize FFT inputs / outputs as byte aligned by pyfftw
         self._q = self._empty_real()
@@ -67,46 +77,106 @@ class PseudoSpectralKernel:
         self.dqhdt_p = self._empty_com()
         self.dqhdt_pp = self._empty_com()
 
-    def _fft_q_to_qh(self):
+        if pyfftw is not None:
+            self._fft_q_to_qh = pyfftw.FFTW(
+                self.q, self.qh, threads=self.ntd, direction='FFTW_FORWARD', axes=(-2, -1)
+            )
+            self._ifft_qh_to_q = pyfftw.FFTW(
+                self.qh, self.q, threads=self.ntd, direction='FFTW_BACKWARD', axes=(-2, -1)
+            )
+            self._ifft_uh_to_u = pyfftw.FFTW(
+                self.uh, self.u, threads=self.ntd, direction='FFTW_BACKWARD', axes=(-2, -1)
+            )
+            self._ifft_vh_to_v = pyfftw.FFTW(
+                self.vh, self.v, threads=self.ntd, direction='FFTW_BACKWARD', axes=(-2, -1)
+            )
+            if has_uv_param:
+                self._fft_du_to_duh = pyfftw.FFTW(
+                    self.du, self.duh, threads=self.ntd, direction='FFTW_FORWARD', axes=(-2, -1)
+                )
+                self._fft_dv_to_dvh = pyfftw.FFTW(
+                    self.dv, self.dvh, threads=self.ntd, direction='FFTW_FORWARD', axes=(-2, -1)
+                )
+            if has_q_param:
+                self._fft_dq_to_dqh = pyfftw.FFTW(
+                    self.dq, self.dqh, threads=self.ntd, direction='FFTW_FORWARD', axes=(-2, -1)
+                )
+            self._fft_uq_to_uqh = pyfftw.FFTW(
+                self.uq, self.uqh, threads=self.ntd, direction='FFTW_FORWARD', axes=(-2,-1)
+            )
+            self._fft_vq_to_vqh = pyfftw.FFTW(
+                self.vq, self.vqh, threads=self.ntd, direction='FFTW_FORWARD', axes=(-2,-1)
+            )
+            # dummy ffts for diagnostics
+            self._dummy_fft = pyfftw.FFTW(
+                self._dummy_fft_in, self._dummy_fft_out, threads=self.ntd, direction='FFTW_FORWARD', axes=(-2, -1)
+            )
+            self._dummy_ifft = pyfftw.FFTW(
+                self._dummy_ifft_in, self._dummy_ifft_out, threads=self.ntd, direction='FFTW_BACKWARD', axes=(-2, -1)
+            )
+        else:
+            self._fft_q_to_qh = self._npfft_q_to_qh
+            self._ifft_qh_to_q = self._npifft_qh_to_q
+            self._ifft_uh_to_u = self._npifft_uh_to_u
+            self._ifft_vh_to_v = self._npifft_vh_to_v
+            if has_uv_param:
+                self._fft_du_to_duh = self._npfft_du_to_duh
+                self._fft_dv_to_dvh = self._npfft_dv_to_dvh
+            if has_q_param:
+                self._fft_dq_to_dqh = self._npfft_dq_to_dqh
+            self._fft_uq_to_uqh = self._npfft_uq_to_uqh
+            self._fft_vq_to_vqh = self._npfft_vq_to_vqh
+            self._dummy_fft = self._npdummy_fft
+            self._dummy_ifft = self._npdummy_ifft
+
+    def _npfft_q_to_qh(self):
         np.fft.rfftn(self._q, axes=(-2, -1), out=self._qh)
 
-    def _ifft_qh_to_q(self):
+    def _npifft_qh_to_q(self):
         np.fft.irfftn(self._qh, axes=(-2, -1), out=self._q)
 
-    def _ifft_uh_to_u(self):
+    def _npifft_uh_to_u(self):
         np.fft.irfftn(self.uh, axes=(-2, -1), out=self.u)
 
-    def _ifft_vh_to_v(self):
+    def _npifft_vh_to_v(self):
         np.fft.irfftn(self.vh, axes=(-2, -1), out=self.v)
 
-    def _fft_du_to_duh(self):
+    def _npfft_du_to_duh(self):
         np.fft.rfftn(self.du, axes=(-2, -1), out=self.duh)
 
-    def _fft_dv_to_dvh(self):
+    def _npfft_dv_to_dvh(self):
         np.fft.rfftn(self.dv, axes=(-2, -1), out=self.dvh)
 
-    def _fft_dq_to_dqh(self):
+    def _npfft_dq_to_dqh(self):
         np.fft.rfftn(self.dq, axes=(-2, -1), out=self.dqh)
 
-    def _fft_uq_to_uqh(self):
+    def _npfft_uq_to_uqh(self):
         np.fft.rfftn(self.uq, axes=(-2, -1), out=self.uqh)
 
-    def _fft_vq_to_vqh(self):
+    def _npfft_vq_to_vqh(self):
         np.fft.rfftn(self.vq, axes=(-2, -1), out=self.vqh)
 
-    def _dummy_fft(self):
+    def _npdummy_fft(self):
         np.fft.rfftn(self._dummy_fft_in, axes=(-2, -1), out=self._dummy_fft_out)
 
-    def _dummy_ifft(self):
+    def _npdummy_ifft(self):
         np.fft.irfftn(self._dummy_ifft_in, axes=(-2, -1), out=self._dummy_ifft_out)
 
     def _empty_real(self):
         """Allocate a space-grid-sized variable for use with fftw transformations."""
-        return np.zeros((self.nz, self.ny, self.nx), dtype=DTYPE_real)
+        shape = (self.nz, self.ny, self.nx)
+        if pyfftw is not None:
+            return pyfftw.zeros_aligned(shape, dtype=DTYPE_real)
+        else:
+            return np.zeros(shape, dtype=DTYPE_real)
 
     def _empty_com(self):
         """Allocate a Fourier-grid-sized variable for use with fftw transformations."""
-        return np.zeros((self.nz, self.nl, self.nk), dtype=DTYPE_com)
+        shape = (self.nz, self.nl, self.nk)
+        if pyfftw is not None:
+            return pyfftw.zeros_aligned(shape, dtype=DTYPE_com)
+        else:
+            return np.zeros(shape, dtype=DTYPE_com)
 
     def fft(self, v):
         """"Generic FFT function for real grid-sized variables.
@@ -137,7 +207,9 @@ class PseudoSpectralKernel:
         )
 
     def _do_uv_subgrid_parameterization(self):
-        self.du, self.dv = self.uv_parameterization(self)
+        new_du, new_dv = self.uv_parameterization(self)
+        np.copyto(self.du, new_du)
+        np.copyto(self.dv, new_dv)
         self._fft_du_to_duh()
         self._fft_dv_to_dvh()
         self.dqhdt = (
@@ -147,7 +219,7 @@ class PseudoSpectralKernel:
         )
 
     def _do_q_subgrid_parameterization(self):
-        self.dq = self.q_parameterization(self)
+        np.copyto(self.dq, self.q_parameterization(self))
         self._fft_dq_to_dqh()
         self.dqhdt = self.dqhdt + self.dqh
 
@@ -166,10 +238,11 @@ class PseudoSpectralKernel:
             dt2 * self.dqhdt_p +
             dt3 * self.dqhdt_pp
         )
-        self._qh = qh_new
+        np.copyto(self._qh, qh_new)
+        self._ifft_qh_to_q()
+        np.copyto(self._qh, qh_new)
         self.dqhdt_pp = self.dqhdt_p
         self.dqhdt_p = self.dqhdt
-        self._ifft_qh_to_q()
         self.tc += 1
         self.t += self._dt
 
@@ -223,7 +296,7 @@ class PseudoSpectralKernel:
 
     @q.setter
     def q(self, b):
-        self._q = np.copy(b)
+        np.copyto(self._q, b)
         self._fft_q_to_qh()
 
     @property
@@ -232,8 +305,9 @@ class PseudoSpectralKernel:
 
     @qh.setter
     def qh(self, b):
-        self._qh = np.copy(b)
+        np.copyto(self._qh, b)
         self._ifft_qh_to_q()
+        np.copyto(self._qh, b)
 
     @property
     def ufull(self):

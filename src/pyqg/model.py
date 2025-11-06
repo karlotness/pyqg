@@ -117,7 +117,7 @@ class Model(PseudoSpectralKernel):
         # removed because fftw is now manditory
         #use_fftw = False,               # fftw flag
         #teststyle = False,            # use fftw with "estimate" planner to get reproducibility
-        ntd = None,                    # number of threads to use in fftw computations
+        ntd = 1,                       # number of threads to use in fftw computations
         log_level = 1,                 # logger level: from 0 for quiet (no log) to 4 for verbose
                                        #     logger (see  https://docs.python.org/2/library/logging.html)
         logfile = None,                # logfile; None prints to screen
@@ -205,6 +205,7 @@ class Model(PseudoSpectralKernel):
             nx=nx,
             has_q_param=q_parameterization is not None,
             has_uv_param=uv_parameterization is not None,
+            ntd=ntd,
         )
 
         self.L = L
@@ -219,13 +220,6 @@ class Model(PseudoSpectralKernel):
         self.logfile = logfile
         self.log_level = log_level
         self.useAB2 = useAB2
-        self.ntd = 1 if ntd is None else ntd
-
-        if ntd is not None:
-            warnings.warn(
-                "The ntd argument is deprecated and no longer has any effect",
-                category=DeprecationWarning,
-            )
 
 
         # friction
