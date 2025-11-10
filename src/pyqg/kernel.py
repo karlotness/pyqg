@@ -40,9 +40,9 @@ class PseudoSpectralKernel:
         nz: int,
         ny: int,
         nx: int,
+        fftw_num_threads: int = 1,
         has_q_param: bool = False,
         has_uv_param: bool = False,
-        ntd: int = 1,
     ):
         self.nz = nz
         self.ny = ny
@@ -55,8 +55,7 @@ class PseudoSpectralKernel:
         self._ll = np.zeros((self.nl), DTYPE_real)
         self._il = np.zeros((self.nl), DTYPE_com)
         self._k2l2 = np.zeros((self.nl, self.nk), DTYPE_real)
-        self.ntd = ntd
-        self.num_thraeds = fftw_num_threads
+        self.num_threads = fftw_num_threads
 
         # initialize FFT inputs / outputs as byte aligned by pyfftw
         self._q = self._empty_real()

@@ -203,9 +203,9 @@ class Model(PseudoSpectralKernel):
             nz=nz,
             ny=ny,
             nx=nx,
+            fftw_num_threads=ntd,
             has_q_param=q_parameterization is not None,
             has_uv_param=uv_parameterization is not None,
-            ntd=ntd,
         )
 
         self.L = L
@@ -220,6 +220,7 @@ class Model(PseudoSpectralKernel):
         self.logfile = logfile
         self.log_level = log_level
         self.useAB2 = useAB2
+        self.ntd = ntd
 
 
         # friction
