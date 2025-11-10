@@ -240,9 +240,8 @@ class PseudoSpectralKernel:
         self.dqhdt = self.dqhdt + self.dqh
 
     def _do_friction(self):
-        k = self.nz - 1
         if self.rek:
-            self.dqhdt[k] = self.dqhdt[k] + (self.rek * self._k2l2 * self.ph[k])
+            self.dqhdt[-1] = self.dqhdt[-1] + (self.rek * self._k2l2 * self.ph[-1])
 
     def _forward_timestep(self):
         dt1, dt2, dt3, next_ablevel = self._ab3_coeffs[self.ablevel]
