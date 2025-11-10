@@ -2,7 +2,7 @@ import pytest
 import numpy as np
 import pyqg
 import json
-import os
+import pathlib
 
 def test_describe_diagnostics():
     """ Test whether describe_diagnostics runs without error """
@@ -154,16 +154,14 @@ def test_diagnostic_magnitude():
     # Load a set of pre-run fixture models from
     # examples/diagnostic_normalization.ipynb (running from scratch would take
     # a bit too long for a test)
-    fixtures_path = f"{os.path.dirname(os.path.realpath(__file__))}/fixtures"
+    fixtures_path = pathlib.Path(__file__).resolve().parent / "fixtures"
 
-    with open(f"{fixtures_path}/LayeredModel_params.json", 'r') as f:
-        # Common set of parameters for each model
-        params = json.load(f)
+    params = json.loads((fixtures_path / "LayeredModel_params.json").read_text())
 
     m1 = pyqg.LayeredModel(nx=96, **params)
     m2 = pyqg.LayeredModel(nx=64, **params)
-    m1.q = np.load(f"{fixtures_path}/LayeredModel_nx96_q.npy")
-    m2.q = np.load(f"{fixtures_path}/LayeredModel_nx64_q.npy")
+    m1.q = np.load(fixtures_path / "LayeredModel_nx96_q.npy")
+    m2.q = np.load(fixtures_path / "LayeredModel_nx64_q.npy")
     for m in [m1, m2]:
         m._invert()
         m._calc_derived_fields()

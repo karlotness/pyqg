@@ -1,7 +1,6 @@
 import numpy as np
-import os
+import pathlib
 import pyqg
-import os
 import json
 from pyqg.diagnostic_tools import *
 
@@ -9,16 +8,14 @@ def test_diagnostic_differences():
     # Load a set of pre-run fixture models from
     # examples/diagnostic_normalization.ipynb (running from scratch would take
     # a bit too long for a test)
-    fixtures_path = f"{os.path.dirname(os.path.realpath(__file__))}/fixtures"
+    fixtures_path = pathlib.Path(__file__).resolve().parent / "fixtures"
 
-    with open(f"{fixtures_path}/LayeredModel_params.json", 'r') as f:
-        # Common set of parameters for each model
-        params = json.load(f)
+    params = json.loads((fixtures_path / "LayeredModel_params.json").read_text())
 
     m1 = pyqg.LayeredModel(nx=96, **params)
     m2 = pyqg.LayeredModel(nx=64, **params)
-    m1.q = np.load(f"{fixtures_path}/LayeredModel_nx96_q.npy")
-    m2.q = np.load(f"{fixtures_path}/LayeredModel_nx64_q.npy")
+    m1.q = np.load(fixtures_path / "LayeredModel_nx96_q.npy")
+    m2.q = np.load(fixtures_path / "LayeredModel_nx64_q.npy")
     for m in [m1, m2]:
         m._invert()
         m._calc_derived_fields()
@@ -52,16 +49,14 @@ def test_calc_ispec_peak():
     assert spectrum_peak_idx == sinewave_freq_idx
 
 def test_calc_ispec_units(rtol=1e-5):
-    fixtures_path = f"{os.path.dirname(os.path.realpath(__file__))}/fixtures"
+    fixtures_path = pathlib.Path(__file__).resolve().parent / "fixtures"
 
-    with open(f"{fixtures_path}/LayeredModel_params.json", 'r') as f:
-        # Common set of parameters for each model
-        params = json.load(f)
+    params = json.loads((fixtures_path / "LayeredModel_params.json").read_text())
 
     m1 = pyqg.LayeredModel(nx=96, **params)
     m2 = pyqg.LayeredModel(nx=64, **params)
-    m1.q = np.load(f"{fixtures_path}/LayeredModel_nx96_q.npy")
-    m2.q = np.load(f"{fixtures_path}/LayeredModel_nx64_q.npy")
+    m1.q = np.load(fixtures_path / "LayeredModel_nx96_q.npy")
+    m2.q = np.load(fixtures_path / "LayeredModel_nx64_q.npy")
     for m in [m1, m2]:
         m._invert()
         m._calc_derived_fields()
