@@ -1,10 +1,8 @@
 import numpy as np
 import os
-import pickle
 import pyqg
-import pytest
 import os
-import pickle
+import json
 from pyqg.diagnostic_tools import *
 
 def test_diagnostic_differences():
@@ -13,9 +11,9 @@ def test_diagnostic_differences():
     # a bit too long for a test)
     fixtures_path = f"{os.path.dirname(os.path.realpath(__file__))}/fixtures"
 
-    with open(f"{fixtures_path}/LayeredModel_params.pkl", 'rb') as f:
+    with open(f"{fixtures_path}/LayeredModel_params.json", 'r') as f:
         # Common set of parameters for each model
-        params = pickle.load(f)
+        params = json.load(f)
 
     m1 = pyqg.LayeredModel(nx=96, **params)
     m2 = pyqg.LayeredModel(nx=64, **params)
@@ -56,9 +54,9 @@ def test_calc_ispec_peak():
 def test_calc_ispec_units(rtol=1e-5):
     fixtures_path = f"{os.path.dirname(os.path.realpath(__file__))}/fixtures"
 
-    with open(f"{fixtures_path}/LayeredModel_params.pkl", 'rb') as f:
+    with open(f"{fixtures_path}/LayeredModel_params.json", 'r') as f:
         # Common set of parameters for each model
-        params = pickle.load(f)
+        params = json.load(f)
 
     m1 = pyqg.LayeredModel(nx=96, **params)
     m2 = pyqg.LayeredModel(nx=64, **params)

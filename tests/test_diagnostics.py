@@ -1,7 +1,7 @@
 import pytest
 import numpy as np
 import pyqg
-import pickle
+import json
 import os
 
 def test_describe_diagnostics():
@@ -156,9 +156,9 @@ def test_diagnostic_magnitude():
     # a bit too long for a test)
     fixtures_path = f"{os.path.dirname(os.path.realpath(__file__))}/fixtures"
 
-    with open(f"{fixtures_path}/LayeredModel_params.pkl", 'rb') as f:
+    with open(f"{fixtures_path}/LayeredModel_params.json", 'r') as f:
         # Common set of parameters for each model
-        params = pickle.load(f)
+        params = json.load(f)
 
     m1 = pyqg.LayeredModel(nx=96, **params)
     m2 = pyqg.LayeredModel(nx=64, **params)
