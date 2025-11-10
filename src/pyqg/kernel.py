@@ -8,6 +8,32 @@ except ModuleNotFoundError:
 DTYPE_real = np.float64
 DTYPE_com = np.complex128
 
+
+def _make_zeros(shape, dtype):
+    if pyfftw is not None:
+        return pyfftw.zeros_aligned(shape, dtype=dtype)
+    else:
+        return np.zeros(shape, dtype=dtype)
+
+
+def _make_rfftn(in_arr, out_arr, threads):
+    if pyfftw is not None:
+        return pyfftw.FFTW(
+            in_arr, out_arr, threads=threads, direction="FFTW_FORWARD", axes=(-2, -1)
+        )
+    else:
+        return lambda: np.fft.rfftn(in_arr, axes=(-2, -1), out=out_arr)
+
+
+def _make_irfftn(in_arr, out_arr, threads):
+    if pyfftw is not None:
+        return pyfftw.FFTW(
+            in_arr, out_arr, threads=threads, direction="FFTW_BACKWARD", axes=(-2, -1)
+        )
+    else:
+        return lambda: np.fft.irfftn(in_arr, axes=(-2, -1), out=out_arr)
+
+
 class PseudoSpectralKernel:
     def __init__(
         self,
@@ -162,19 +188,11 @@ class PseudoSpectralKernel:
 
     def _empty_real(self):
         """Allocate a space-grid-sized variable for use with fftw transformations."""
-        shape = (self.nz, self.ny, self.nx)
-        if pyfftw is not None:
-            return pyfftw.zeros_aligned(shape, dtype=DTYPE_real)
-        else:
-            return np.zeros(shape, dtype=DTYPE_real)
+        return _make_zeros(shape=(self.nz, self.ny, self.nx), dtype=DTYPE_real)
 
     def _empty_com(self):
         """Allocate a Fourier-grid-sized variable for use with fftw transformations."""
-        shape = (self.nz, self.nl, self.nk)
-        if pyfftw is not None:
-            return pyfftw.zeros_aligned(shape, dtype=DTYPE_com)
-        else:
-            return np.zeros(shape, dtype=DTYPE_com)
+        return _make_zeros(shape=(self.nz, self.nl, self.nk), dtype=DTYPE_com)
 
     def fft(self, v):
         """"Generic FFT function for real grid-sized variables.
