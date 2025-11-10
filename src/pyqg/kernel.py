@@ -1,10 +1,8 @@
 import numpy as np
-import warnings
 
 try:
     import pyfftw
 except ModuleNotFoundError:
-    warnings.warn("No PyFFTW detected. Using numpy.fft")
     pyfftw = None
 
 DTYPE_real = np.float64
