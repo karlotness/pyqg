@@ -120,8 +120,12 @@ class PseudoSpectralKernel:
         self._fft_uq_to_uqh = _make_rfftn(self.uq, self.uqh, self.num_threads)
         self._fft_vq_to_vqh = _make_rfftn(self.vq, self.vqh, self.num_threads)
         # dummy ffts for diagnostics
-        self._dummy_fft = _make_rfftn(self._dummy_fft_in, self._dummy_fft_out, self.num_threads)
-        self._dummy_ifft = _make_irfftn(self._dummy_ifft_in, self._dummy_ifft_out, self.num_threads)
+        self._dummy_fft = _make_rfftn(
+            self._dummy_fft_in, self._dummy_fft_out, self.num_threads
+        )
+        self._dummy_ifft = _make_irfftn(
+            self._dummy_ifft_in, self._dummy_ifft_out, self.num_threads
+        )
 
     def _empty_real(self):
         """Allocate a space-grid-sized variable for use with fftw transformations."""
@@ -132,7 +136,7 @@ class PseudoSpectralKernel:
         return _make_zeros(shape=(self.nz, self.nl, self.nk), dtype=DTYPE_com)
 
     def fft(self, v):
-        """"Generic FFT function for real grid-sized variables.
+        """Generic FFT function for real grid-sized variables.
         Not used for actual model ffs."""
         # copy input into memory view
         return np.fft.rfftn(v, axes=(-2, -1))
@@ -142,13 +146,19 @@ class PseudoSpectralKernel:
 
     def _invert(self):
         np.sum(self._a * np.expand_dims(self._qh, 0), axis=1, out=self.ph)
-        np.multiply(np.negative(np.expand_dims(self._il, (0, -1))), self.ph, out=self.uh)
+        np.multiply(
+            np.negative(np.expand_dims(self._il, (0, -1))), self.ph, out=self.uh
+        )
         np.multiply(np.expand_dims(self._ik, (0, 1)), self.ph, out=self.vh)
         self._ifft_uh_to_u()
         self._ifft_vh_to_v()
 
     def _do_advection(self):
-        np.multiply((self.u + np.expand_dims(self.Ubg[: self.nz], (-1, -2))), self._q, out=self.uq)
+        np.multiply(
+            (self.u + np.expand_dims(self.Ubg[: self.nz], (-1, -2))),
+            self._q,
+            out=self.uq,
+        )
         np.multiply(self.v, self._q, out=self.vq)
         self._fft_uq_to_uqh()
         self._fft_vq_to_vqh()
@@ -185,10 +195,7 @@ class PseudoSpectralKernel:
         self.ablevel = next_ablevel
 
         qh_new = np.expand_dims(self.filtr, 0) * (
-            self._qh +
-            dt1 * self.dqhdt +
-            dt2 * self.dqhdt_p +
-            dt3 * self.dqhdt_pp
+            self._qh + dt1 * self.dqhdt + dt2 * self.dqhdt_p + dt3 * self.dqhdt_pp
         )
         np.copyto(self._qh, qh_new)
         self._ifft_qh_to_q()
@@ -220,7 +227,9 @@ class PseudoSpectralKernel:
     def kk(self, k):
         self._kk = k
         self._ik = 1j * self._kk
-        self._k2l2 = (np.expand_dims(self._kk, 0) ** 2) + (np.expand_dims(self._ll, -1) ** 2)
+        self._k2l2 = (np.expand_dims(self._kk, 0) ** 2) + (
+            np.expand_dims(self._ll, -1) ** 2
+        )
 
     @property
     def ll(self):
@@ -230,8 +239,9 @@ class PseudoSpectralKernel:
     def ll(self, l):
         self._ll = l
         self._il = 1j * self._ll
-        self._k2l2 = (np.expand_dims(self._kk, 0) ** 2) + (np.expand_dims(self._ll, -1) ** 2)
-
+        self._k2l2 = (np.expand_dims(self._kk, 0) ** 2) + (
+            np.expand_dims(self._ll, -1) ** 2
+        )
 
     @property
     def Qy(self):
