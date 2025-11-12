@@ -22,7 +22,11 @@ def _make_rfftn(in_arr, out_arr, threads):
             in_arr, out_arr, threads=threads, direction="FFTW_FORWARD", axes=(-2, -1)
         )
     else:
-        return lambda: np.fft.rfftn(in_arr, axes=(-2, -1), out=out_arr)
+
+        def compute_np_rfftn():
+            return np.fft.rfftn(in_arr, axes=(-2, -1), out=out_arr)
+
+        return compute_np_rfftn
 
 
 def _make_irfftn(in_arr, out_arr, threads):
@@ -31,7 +35,11 @@ def _make_irfftn(in_arr, out_arr, threads):
             in_arr, out_arr, threads=threads, direction="FFTW_BACKWARD", axes=(-2, -1)
         )
     else:
-        return lambda: np.fft.irfftn(in_arr, axes=(-2, -1), out=out_arr)
+
+        def compute_np_irfftn():
+            return np.fft.irfftn(in_arr, axes=(-2, -1), out=out_arr)
+
+        return compute_np_irfftn
 
 
 class PseudoSpectralKernel:
