@@ -1,6 +1,5 @@
 import numpy as np
 import pyqg
-import xarray as xr
 import pytest
 
 year = 24*60*60*360.
@@ -127,6 +126,7 @@ def all_models(request):
 
 def test_xarray(all_models):
     '''Run with snapshots and test contents of xarray.dataset'''
+    xr = pytest.importorskip("xarray")
     m=all_models
     tsnapint=year/4
     datasets = []
