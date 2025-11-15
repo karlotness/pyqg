@@ -32,7 +32,7 @@ jobs:
       with:
         python-version: '3.14'
     - name: Run tox tests
-      run: pipx run --python "$WORKFLOW_PYTHON" tox run -e py
+      run: pipx run --python "$WORKFLOW_PYTHON" tox run -m ci
       env:
         WORKFLOW_PYTHON: '${{ steps.setup-python.outputs.python-path }}'
   build:
