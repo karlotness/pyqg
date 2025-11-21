@@ -1,8 +1,7 @@
 name: "Release"
 on:
-  push:
-    tags:
-      - 'v[0-9]*'
+  release:
+    types: [created]
 permissions:
   contents: read
 jobs:
@@ -80,45 +79,6 @@ jobs:
       run: pipx run --python "$WORKFLOW_PYTHON" twine check --strict dist/*.tar.gz dist/*.whl
       env:
         WORKFLOW_PYTHON: '${{ steps.setup-python.outputs.python-path }}'
-  draft-release:
-    runs-on: ubuntu-latest
-    timeout-minutes: 10
-    needs: check-artifacts
-    permissions:
-      contents: write
-    steps:
-    - name: Download artifacts
-      uses: actions/download-artifact@v6
-      with:
-        name: build
-        path: dist/
-    - name: Draft release body
-      run: |
-        {
-          printf '<details><summary>SHA256 Checksums</summary>\n\n```\n'
-          sha256sum dist/*.tar.gz dist/*.whl | sed 's!dist/!!'
-          printf '```\n\n</details>\n\n'
-          printf '<details><summary>SHA512 Checksums</summary>\n\n```\n'
-          sha512sum dist/*.tar.gz dist/*.whl | sed 's!dist/!!'
-          printf '```\n\n</details>\n'
-        } > release_body.md
-    - name: Create release
-      run: gh release create "$GITHUB_REF_NAME" --title "$GITHUB_REF_NAME" --target "$GITHUB_SHA" --draft --notes-file 'release_body.md' --repo "$GITHUB_REPOSITORY" dist/*.tar.gz dist/*.whl
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-    - name: Prepare step summary
-      run: printf '# Artifact Contents\n' > "$GITHUB_STEP_SUMMARY"
-    - name: Summarize checksums
-      run: |
-        {
-          printf '## Checksums\n\n'
-          printf '<details><summary>SHA256 Checksums</summary>\n\n```\n'
-          sha256sum dist/*.tar.gz dist/*.whl | sed 's!dist/!!'
-          printf '```\n\n</details>\n\n'
-          printf '<details><summary>SHA512 Checksums</summary>\n\n```\n'
-          sha512sum dist/*.tar.gz dist/*.whl | sed 's!dist/!!'
-          printf '```\n\n</details>\n\n'
-        } >> "$GITHUB_STEP_SUMMARY"
     - name: Summarize contents
       run: |
         printf '## Contents\n' >> "$GITHUB_STEP_SUMMARY"
@@ -139,7 +99,7 @@ jobs:
   upload:
     runs-on: ubuntu-latest
     timeout-minutes: 20
-    needs: draft-release
+    needs: check-artifacts
     environment: pypi
     permissions:
       id-token: write
@@ -151,14 +111,3 @@ jobs:
         path: dist/
     - name: Upload package
       uses: pypa/gh-action-pypi-publish@release/v1
-  publish-release:
-    runs-on: ubuntu-latest
-    timeout-minutes: 10
-    needs: upload
-    permissions:
-      contents: write
-    steps:
-    - name: Publish GitHub release
-      run: gh release edit "$GITHUB_REF_NAME" --draft=false --repo "$GITHUB_REPOSITORY"
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
