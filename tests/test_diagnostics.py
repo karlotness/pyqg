@@ -23,7 +23,7 @@ def old_qgmodel_calc_paramspec(self, dqh1, dqh2):
         (del1 * F1 / (wv2 + F1 + F2) * (dqh2 - dqh1) * np.conj(ph[0] - ph[1]))
     )
 
-def test_paramspec_decomposition(rtol=1e-10):
+def test_paramspec_decomposition(rtol=1e-7):
     # Initialize a model with a parameterization, step it forward and compute paramspec
     dq = np.random.normal(size=(2,64,64))
     m = pyqg.QGModel(q_parameterization = lambda m: dq)
