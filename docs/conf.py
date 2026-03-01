@@ -13,6 +13,7 @@ extensions = [
     "sphinx.ext.napoleon",
     "sphinx_rtd_theme",
     "myst_nb",
+    "sphinx_inline_tabs",
 ]
 
 extlinks = {"issue": ("https://github.com/pyqg/pyqg/issues/%s", "GH%s")}
