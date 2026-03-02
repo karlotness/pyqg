@@ -53,7 +53,7 @@ jobs:
       env:
         WORKFLOW_PYTHON: '${{ steps.setup-python.outputs.python-path }}'
     - name: Store artifacts
-      uses: actions/upload-artifact@v6
+      uses: actions/upload-artifact@v7
       with:
         name: build
         if-no-files-found: error
@@ -71,7 +71,7 @@ jobs:
       with:
         python-version: '3.14'
     - name: Download artifacts
-      uses: actions/download-artifact@v7
+      uses: actions/download-artifact@v8
       with:
         name: build
         path: dist/
@@ -105,7 +105,7 @@ jobs:
       id-token: write
     steps:
     - name: Download artifacts
-      uses: actions/download-artifact@v7
+      uses: actions/download-artifact@v8
       with:
         name: build
         path: dist/
